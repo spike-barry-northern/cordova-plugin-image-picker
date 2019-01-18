@@ -1,3 +1,6 @@
+* Note, this is an experimental work in progress and is not ready to be used in builds *
+
+
 cordova-imagePicker
 ===================
 
