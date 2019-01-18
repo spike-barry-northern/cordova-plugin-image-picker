@@ -7,23 +7,14 @@
 
 #import "ELCAssetCell.h"
 #import "ELCAsset.h"
-#import "Donkeyfont.h"
 
 @interface ELCAssetCell ()
 
 @property (nonatomic, strong) NSArray *rowAssets;
 @property (nonatomic, strong) NSMutableArray *imageViewArray;
-@property (nonatomic, strong) NSMutableArray *checkIconArray;
-@property (nonatomic, strong) NSMutableArray *circleIconArray;
+@property (nonatomic, strong) NSMutableArray *overlayViewArray;
 
 @end
-
-static const float gThumbWidth = 75.0f;
-static const float gThumbHeight = 75.0f;
-static const float gTopBuffer = 2.0f;
-static const float gIconLeftBuffer = 5.0f;
-static const float gIconTopBuffer = 5.0f;
-static const unsigned int gRowMax = 4;
 
 @implementation ELCAssetCell
 
@@ -36,14 +27,11 @@ static const unsigned int gRowMax = 4;
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellTapped:)];
         [self addGestureRecognizer:tapRecognizer];
         
-        NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithCapacity:gRowMax];
+        NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithCapacity:4];
         self.imageViewArray = mutableArray;
         
-        NSMutableArray *checkIconArray = [[NSMutableArray alloc] initWithCapacity:gRowMax];
-        self.checkIconArray = checkIconArray;
-        
-        NSMutableArray *circleIconArray = [[NSMutableArray alloc] initWithCapacity:gRowMax];
-        self.circleIconArray = circleIconArray;
+        NSMutableArray *overlayArray = [[NSMutableArray alloc] initWithCapacity:4];
+        self.overlayViewArray = overlayArray;
 	}
 	return self;
 }
@@ -54,19 +42,11 @@ static const unsigned int gRowMax = 4;
 	for (UIImageView *view in _imageViewArray) {
         [view removeFromSuperview];
 	}
-
-    for (UILabel *view in _checkIconArray) {
+    for (UIImageView *view in _overlayViewArray) {
         [view removeFromSuperview];
-    }
-    
-    for (UILabel *view in _circleIconArray) {
-        [view removeFromSuperview];
-    }
-
-    UIFont *donkeyFont = [UIFont fontWithName:@"DonkeyFont" size:25];
-    UILabel *checkLabel = nil;
-    UILabel *circleLabel = nil;
-    CGSize overlaySize;
+	}
+    //set up a pointer here so we don't keep calling [UIImage imageNamed:] if creating overlays
+    UIImage *overlayImage = nil;
     for (int i = 0; i < [_rowAssets count]; ++i) {
 
         ELCAsset *asset = [_rowAssets objectAtIndex:i];
@@ -74,31 +54,21 @@ static const unsigned int gRowMax = 4;
         if (i < [_imageViewArray count]) {
             UIImageView *imageView = [_imageViewArray objectAtIndex:i];
             imageView.image = [UIImage imageWithCGImage:asset.asset.thumbnail];
-            overlaySize = CGSizeMake(CGRectGetWidth(imageView.frame), CGRectGetHeight(imageView.frame));
         } else {
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:asset.asset.thumbnail]];
             [_imageViewArray addObject:imageView];
-            overlaySize = CGSizeMake(CGRectGetWidth(imageView.frame), CGRectGetHeight(imageView.frame));
         }
-
-        if (i < [_checkIconArray count]) {
-            UILabel *circleLabel = [_circleIconArray objectAtIndex:i];
-            UILabel *checkLabel = [_checkIconArray objectAtIndex:i];
-            [self selectThumbnail:checkLabel circleLabel:circleLabel selected:asset.selected];
+        
+        if (i < [_overlayViewArray count]) {
+            UIImageView *overlayView = [_overlayViewArray objectAtIndex:i];
+            overlayView.hidden = asset.selected ? NO : YES;
         } else {
-            checkLabel = [[UILabel alloc] init];
-            checkLabel.textColor = [UIColor whiteColor];
-            checkLabel.font = donkeyFont;
-            checkLabel.textAlignment = NSTextAlignmentLeft;
-            [_checkIconArray addObject:checkLabel];
-            
-            circleLabel = [[UILabel alloc] init];
-            circleLabel.textColor = [UIColor whiteColor];
-            circleLabel.font = donkeyFont;
-            circleLabel.textAlignment = NSTextAlignmentLeft;
-            [_circleIconArray addObject:circleLabel];
-            
-            [self selectThumbnail:checkLabel circleLabel:circleLabel selected:asset.selected];
+            if (overlayImage == nil) {
+                overlayImage = [UIImage imageNamed:@"Overlay.png"];
+            }
+            UIImageView *overlayView = [[UIImageView alloc] initWithImage:overlayImage];
+            [_overlayViewArray addObject:overlayView];
+            overlayView.hidden = asset.selected ? NO : YES;
         }
     }
 }
@@ -106,65 +76,41 @@ static const unsigned int gRowMax = 4;
 - (void)cellTapped:(UITapGestureRecognizer *)tapRecognizer
 {
     CGPoint point = [tapRecognizer locationInView:self];
-    CGFloat totalWidth = self.rowAssets.count * gThumbWidth + (self.rowAssets.count - 1) * gRowMax;
+    CGFloat totalWidth = self.rowAssets.count * 75 + (self.rowAssets.count - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
     
-	CGRect frame = CGRectMake(startX, gTopBuffer, gThumbWidth, gThumbHeight);
+	CGRect frame = CGRectMake(startX, 2, 75, 75);
 	
-    for (int i = 0; i < [_rowAssets count]; ++i) {
-
+	for (int i = 0; i < [_rowAssets count]; ++i) {
         if (CGRectContainsPoint(frame, point)) {
             ELCAsset *asset = [_rowAssets objectAtIndex:i];
             asset.selected = !asset.selected;
-            UILabel *checkLabel = [_checkIconArray objectAtIndex:i];
-            UILabel *circleLabel = [_circleIconArray objectAtIndex:i];
-            [self selectThumbnail:checkLabel circleLabel:circleLabel selected:asset.selected];
+            UIImageView *overlayView = [_overlayViewArray objectAtIndex:i];
+            overlayView.hidden = !asset.selected;
             break;
         }
-        frame.origin.x = frame.origin.x + frame.size.width + gRowMax;
+        frame.origin.x = frame.origin.x + frame.size.width + 4;
     }
 }
 
 - (void)layoutSubviews
 {    
-    CGFloat totalWidth = self.rowAssets.count * gThumbWidth + (self.rowAssets.count - 1) * gRowMax;
+    CGFloat totalWidth = self.rowAssets.count * 75 + (self.rowAssets.count - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
     
-	CGRect frame = CGRectMake(startX, gTopBuffer, gThumbWidth, gThumbHeight);
+	CGRect frame = CGRectMake(startX, 2, 75, 75);
 	
 	for (int i = 0; i < [_rowAssets count]; ++i) {
 		UIImageView *imageView = [_imageViewArray objectAtIndex:i];
 		[imageView setFrame:frame];
 		[self addSubview:imageView];
         
-        UILabel *checkLabel = [_checkIconArray objectAtIndex:i];
-        UILabel *circleLabel = [_circleIconArray objectAtIndex:i];
-        CGRect iconFrame = CGRectMake(frame.origin.x + gIconLeftBuffer,
-                                         frame.origin.y + gIconTopBuffer,
-                                         frame.size.width,
-                                         frame.size.height / 3);
-        [checkLabel setFrame:iconFrame];
-        [circleLabel setFrame:iconFrame];
-        [self addSubview:circleLabel];
-        
-        [self addSubview:checkLabel];
-        
-        
+        UIImageView *overlayView = [_overlayViewArray objectAtIndex:i];
+        [overlayView setFrame:frame];
+        [self addSubview:overlayView];
 		
-		frame.origin.x = frame.origin.x + frame.size.width + gRowMax;
+		frame.origin.x = frame.origin.x + frame.size.width + 4;
 	}
-}
-
-- (void)selectThumbnail:(UILabel*)checkLabel circleLabel:(UILabel*)circleLabel selected:(bool)selected {
-    checkLabel.text = selected ? ICON_ZP_V2_GALLERY_IMAGE_SELECTED : ICON_ZP_V2_GALLERY_IMAGE_UNSELECTED;
-    checkLabel.textColor = selected ? [UIColor colorWithRed:22.0f / 255.0f
-                                                      green:157 / 255.0f
-                                                       blue:217.0f / 255.0f
-                                                      alpha:1.0] : [UIColor whiteColor];
-    
-    circleLabel.text = ICON_ZP_V2_CIRCLE;
-    circleLabel.textColor = [UIColor whiteColor];
-    circleLabel.alpha = selected ? 1.0f : 0.0f;
 }
 
 
