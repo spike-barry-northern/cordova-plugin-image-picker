@@ -4,7 +4,6 @@
   id="cordova-plugin-image-picker"
   version="1.2.3">
 
-	<dependency id="cordova-plugin-donkeyfont" url="https://github.com/zenput/cordova-plugin-donkeyfont" commit="v1.0.1" />
 	<name>ImagePicker</name>
 	 
 	<description>

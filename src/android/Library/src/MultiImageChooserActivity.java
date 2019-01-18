@@ -92,7 +92,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
     public static final String HEIGHT_KEY = "HEIGHT";
     public static final String QUALITY_KEY = "QUALITY";
 
-    private Typeface mDonkeyFont = null;
+    private Typeface mRobotoRegularFont = null;
 
     private ImageAdapter ia;
 
@@ -134,7 +134,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
         checkStatus.clear();
         fileNames.clear();
 
-        mDonkeyFont = Typeface.createFromAsset(getAssets(), "fonts/donkeyfont.ttf");
+        mRobotoRegularFont = Typeface.createFromAsset(getAssets(), "www/fonts/Roboto-Regular.ttf");
 
         maxImages = getIntent().getIntExtra(MAX_IMAGES_KEY, NOLIMIT);
         desiredWidth = getIntent().getIntExtra(WIDTH_KEY, 0);
@@ -409,7 +409,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
             super.onDraw(canvas);
 
             Paint iconPaint = new Paint();
-            iconPaint.setTypeface(mDonkeyFont);
+            iconPaint.setTypeface(mRobotoRegularFont);
             float size = this.getWidth() * 0.25f;
             float padding = this.getWidth() * 0.05f;
             iconPaint.setTextSize(size);
@@ -419,7 +419,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                 iconPaint.setColor(zenputBlue);
                 iconPaint.setAlpha(255);
                 Paint circlePaint = new Paint();
-                circlePaint.setTypeface(mDonkeyFont);
+                circlePaint.setTypeface(mRobotoRegularFont);
                 circlePaint.setColor(Color.WHITE);
                 circlePaint.setTextSize(size);
 
