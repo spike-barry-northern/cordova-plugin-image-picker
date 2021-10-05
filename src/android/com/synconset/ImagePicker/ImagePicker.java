@@ -6,6 +6,7 @@ package com.synconset;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.engine.SystemWebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +82,8 @@ public class ImagePicker extends CordovaPlugin {
 			try {
 				this.cordova.getActivity().runOnUiThread(new Runnable(){
 					public void run() {
-						WebSettings webSettings = webView.getSettings();
+						SystemWebView systemWebView = (SystemWebView)webView.getEngine().getView();
+						WebSettings webSettings = systemWebView.getSettings();
 
 						webSettings.setAllowFileAccess(true);
 					}
