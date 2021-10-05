@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.webkit.WebSettings;
 
 public class ImagePicker extends CordovaPlugin {
 	public static String TAG = "ImagePicker";
