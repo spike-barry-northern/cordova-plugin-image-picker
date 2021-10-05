@@ -9,12 +9,12 @@ public class MainActivity extends CordovaActivity {
     public void init() {
         super.init();
 
-        Log.v("Image Picker", "Setting web view setting.");
+        Log.v("ImagePicker", "Setting web view setting.");
 
         WebView webView = (SystemWebView)(appView.getEngine().getView());
         WebSettings webSettings = webView.getSettings();
         webSettings.setAllowFileAccess(true);
 
-        Log.i("Image Picker", "Set web view setting.");
+        Log.i("ImagePicker", "Set web view setting.");
     }
 }
