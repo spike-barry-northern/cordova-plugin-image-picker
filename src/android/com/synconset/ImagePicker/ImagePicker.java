@@ -18,6 +18,7 @@ import android.util.Log;
 
 public class ImagePicker extends CordovaPlugin {
 	public static String TAG = "ImagePicker";
+	private static boolean setWebViewSetting = false;
 	 
 	private CallbackContext callbackContext;
 	private JSONObject params;
@@ -26,6 +27,8 @@ public class ImagePicker extends CordovaPlugin {
 		 this.callbackContext = callbackContext;
 		 this.params = args.getJSONObject(0);
 		if (action.equals("getPictures")) {
+			setFileAllowAccess();
+
 			Intent intent = new Intent(cordova.getActivity(), MultiImageChooserActivity.class);
 			int max = 20;
 			int desiredWidth = 0;
@@ -67,6 +70,27 @@ public class ImagePicker extends CordovaPlugin {
 			this.callbackContext.success(res);
 		} else {
 			this.callbackContext.error("No images selected");
+		}
+	}
+
+	private void setFileAllowAccess() {
+		Log.v(TAG, "Setting file allow access.");
+		if (!this.setWebViewSetting) {
+			try {
+				this.cordova.getActivity().runOnUiThread(new Runnable(){
+					public void run() {
+						WebSettings webSettings = webView.getSettings();
+
+						webSettings.setAllowFileAccess(true);
+					}
+				});
+
+				Log.i(TAG, "Set file allow access.");
+				this.setWebViewSetting = true;
+			}
+			catch (Exception ex) {
+				Log.e(TAG, "Failed to set file allow access.", ex);
+			}
 		}
 	}
 }
