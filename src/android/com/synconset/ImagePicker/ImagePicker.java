@@ -16,11 +16,9 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.webkit.WebSettings;
 
 public class ImagePicker extends CordovaPlugin {
-	public static String TAG = "ImagePicker";
 	private static boolean setWebViewSetting = false;
 	 
 	private CallbackContext callbackContext;
@@ -77,24 +75,17 @@ public class ImagePicker extends CordovaPlugin {
 	}
 
 	private void setFileAllowAccess() {
-		Log.v(TAG, "Setting file allow access.");
 		if (!this.setWebViewSetting) {
-			try {
-				this.cordova.getActivity().runOnUiThread(new Runnable(){
-					public void run() {
-						SystemWebView systemWebView = (SystemWebView)webView.getEngine().getView();
-						WebSettings webSettings = systemWebView.getSettings();
+			this.cordova.getActivity().runOnUiThread(new Runnable(){
+				public void run() {
+					SystemWebView systemWebView = (SystemWebView)webView.getEngine().getView();
+					WebSettings webSettings = systemWebView.getSettings();
 
-						webSettings.setAllowFileAccess(true);
-					}
-				});
+					webSettings.setAllowFileAccess(true);
+				}
+			});
 
-				Log.i(TAG, "Set file allow access.");
-				this.setWebViewSetting = true;
-			}
-			catch (Exception ex) {
-				Log.e(TAG, "Failed to set file allow access.", ex);
-			}
+			this.setWebViewSetting = true;
 		}
 	}
 }
