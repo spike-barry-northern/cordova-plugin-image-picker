@@ -73,6 +73,10 @@
             </activity>
 		</config-file>
 		
+		<edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+			<application android:requestLegacyExternalStorage="true" />
+		</edit-config>
+		
 		<config-file target="AndroidManifest.xml" parent="/manifest">
 		    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 		</config-file>
