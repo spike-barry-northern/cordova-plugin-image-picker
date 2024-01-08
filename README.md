@@ -5,7 +5,7 @@ Cordova Plugin For Multiple Image Selection - implemented for iOS and Android 4.
 The plugin conforms to the Cordova plugin specification, it can be installed using the Cordova / Phonegap command line interface.
 
 ```sh
-cordova plugin add @zenput/cordova-plugin-image-picker
+cordova plugin add cordova-plugin-image-picker
 ```
 
 ## Publishing a new version

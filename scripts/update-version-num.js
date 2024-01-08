@@ -6,8 +6,7 @@
  *
  */
 
-// @author:david maybe move this to it's own npm package, like @zenput/bump-cordova-plugin-version so we can use this
-// across Cordova plugin projects
+
 
 const fs = require('fs');
 const convert = require('xml-js');
