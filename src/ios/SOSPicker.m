@@ -85,7 +85,8 @@
             
             UIImage* image = [UIImage imageWithCGImage:imgRef scale:1.0f orientation:orientation];
             if (self.width == 0 && self.height == 0) {
-                data = UIImageJPEGRepresentation(image, self.quality/100.0f);
+                UIImage *scaledImage = [self imageByScalingNotCroppingForSize:image toSize:image.size];
+                data = UIImageJPEGRepresentation(scaledImage, self.quality/100.0f);
             } else {
                 UIImage* scaledImage = [self imageByScalingNotCroppingForSize:image toSize:targetSize];
                 data = UIImageJPEGRepresentation(scaledImage, self.quality/100.0f);
@@ -146,7 +147,12 @@
         scaledSize = CGSizeMake(width * scaleFactor, height * scaleFactor);
     }
 
-    UIGraphicsBeginImageContext(scaledSize); // this will resize
+    @try {
+        UIGraphicsBeginImageContext(scaledSize); // this will resize
+    }
+    @catch (NSException *exception) {
+        // this prevents a crash but will result in the picture not being selected for the user
+    }
 
     [sourceImage drawInRect:CGRectMake(0, 0, scaledSize.width, scaledSize.height)];
 
