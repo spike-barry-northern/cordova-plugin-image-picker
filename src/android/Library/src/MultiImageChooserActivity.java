@@ -93,6 +93,10 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
     public static final String HEIGHT_KEY = "HEIGHT";
     public static final String QUALITY_KEY = "QUALITY";
 
+    private final String M_ICON_SELECTED = "\uE060";
+    private final String M_ICON_UNSELECTED = "\uE061";
+    private final String M_ICON_CIRCLE = "\uE06E";
+
     private Typeface mRobotoRegularFont = null;
 
     private ImageAdapter ia;
@@ -419,15 +423,20 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                 circlePaint.setColor(Color.WHITE);
                 circlePaint.setTextSize(size);
 
-                canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_circle")), padding, padding + size,
-                        circlePaint);
-                canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_gallery_image_selected")), padding,
-                        padding + size, iconPaint);
+                canvas.drawText(M_ICON_CIRCLE, padding, padding+size, circlePaint);
+                canvas.drawText(M_ICON_SELECTED, padding, padding+size, iconPaint);
+
+                // canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_circle")), padding, padding + size,
+                //         circlePaint);
+                // canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_gallery_image_selected")), padding,
+                //         padding + size, iconPaint);
             } else {
                 iconPaint.setColor(Color.WHITE);
                 iconPaint.setAlpha(255);
-                canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_gallery_image_unselected")), padding,
-                        padding + size, iconPaint);
+                
+                canvas.drawText(M_ICON_UNSELECTED, padding, padding+size, iconPaint);
+                // canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_gallery_image_unselected")), padding,
+                //         padding + size, iconPaint);
             }
         }
     }
