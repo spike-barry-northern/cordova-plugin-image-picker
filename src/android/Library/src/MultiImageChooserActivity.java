@@ -93,9 +93,8 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
     public static final String HEIGHT_KEY = "HEIGHT";
     public static final String QUALITY_KEY = "QUALITY";
 
-    private final String M_ICON_SELECTED = "\uE060";
-    private final String M_ICON_UNSELECTED = "\uE061";
-    private final String M_ICON_CIRCLE = "\uE06E";
+    private final String M_ICON_SELECTED = "\uF046";
+    private final String M_ICON_UNSELECTED = "\uF096";
 
     private Typeface mRobotoRegularFont = null;
 
@@ -139,7 +138,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
         checkStatus.clear();
         fileUris.clear();
 
-        mRobotoRegularFont = Typeface.createFromAsset(getAssets(), "www/fonts/Roboto-Regular.ttf");
+        mRobotoRegularFont = Typeface.createFromAsset(getAssets(), "www/fonts/fontawesome-webfont.ttf");
 
         maxImages = getIntent().getIntExtra(MAX_IMAGES_KEY, NOLIMIT);
         desiredWidth = getIntent().getIntExtra(WIDTH_KEY, 0);
@@ -418,12 +417,12 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                 int imagePickerBlue = getResources().getColor(fakeR.getId("color", "imagePickerBlue"));
                 iconPaint.setColor(imagePickerBlue);
                 iconPaint.setAlpha(255);
-                Paint circlePaint = new Paint();
-                circlePaint.setTypeface(mRobotoRegularFont);
-                circlePaint.setColor(Color.WHITE);
-                circlePaint.setTextSize(size);
+                // Paint circlePaint = new Paint();
+                // circlePaint.setTypeface(mRobotoRegularFont);
+                // circlePaint.setColor(Color.WHITE);
+                // circlePaint.setTextSize(size);
 
-                canvas.drawText(M_ICON_CIRCLE, padding, padding+size, circlePaint);
+                // canvas.drawText(M_ICON_CIRCLE, padding, padding+size, circlePaint);
                 canvas.drawText(M_ICON_SELECTED, padding, padding+size, iconPaint);
 
                 // canvas.drawText(getString(fakeR.getId("string", "icon_zp_v2_circle")), padding, padding + size,
